@@ -1,28 +1,19 @@
 # Rôles
 
-- Clément (Scrum Master)
+- Clément (Dev)
 - Ylan (Dev)
 - Lorenzo (PO)
-- Rémi (Dev)
+- Rémi (Scrum Master)
 
-## Idées du projet (base ChatGPT)
+# Idées du projet
 
-🌡️ Thermomètre Émotionnel des Chaussettes Orphelines
+Créer une application de gestion de chaussettes orphelines :
 
-Un site qui analyse… les émotions des chaussettes perdues lors des lessives.
+Les utilisateurs peuvent : 
+- enregistrer une chaussettes orphelines (taille, couleur, type) 
+- les afficher dans un dashboard 
+- les filtrer
+- marquer le statut de la chaussette comme “en couple”, "célibataire", ect...
 
-Fonctionnement :
-
-- L’utilisateur téléverse une photo d’une chaussette seule.
-
-- Le site affiche :
-
-- Son état émotionnel (ex. : « nostalgique », « existentionally confused »).
-
-- Une jauge de « probabilité de retrouver sa sœur » totalement aléatoire.
-
-- Un mini-message écrit par la chaussette, genre « Je me souviens encore de l’odeur de mon jumeau… ».
-
-Bonus : une carte mondiale en temps réel de l’"errance des chaussettes".
-
-But : strictement aucun, à part faire rire.
+# Techno
+- Symfony
