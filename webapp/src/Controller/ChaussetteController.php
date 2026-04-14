@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Repository\CouleurRepository;
+use App\Repository\TypeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,7 +18,7 @@ use DateTime;
 final class ChaussetteController extends AbstractController
 {
     #[Route('/chaussette', name: 'app_chaussette')]
-    public function index(ChaussetteRepository $repository, Request $request, PaginatorInterface $paginator): Response
+    public function index(ChaussetteRepository $repository, TypeRepository $typeRepository, CouleurRepository $couleurRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $filters = $this->extraireFiltresRecherche($request);
 
@@ -39,11 +41,9 @@ final class ChaussetteController extends AbstractController
         return $this->render('chaussette/index.html.twig', [
             'chaussettes' => $pagination,
 
-            // On passe les variables pour alimenter tes menus déroulants (select) dans le template Twig
-            'liste_couleurs' => $repository->findAll(), // Récupère toutes les couleurs possibles
-            'liste_types' => $repository->findAll(),    // Récupère tous les types possibles
-            'liste_tailles' => $repository->findDistinctTailles(), // Méthode custom
-
+            'liste_couleurs' => $couleurRepository->findAll(),
+            'liste_types'    => $typeRepository->findAll(),
+            'liste_tailles'  => $repository->findDistinctTailles(),
         ]);
     }
 
