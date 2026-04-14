@@ -2,42 +2,28 @@
 <html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
-
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}CLYR{% endblock %}</title>
+        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%221em%22 font-size=%2280%22>🧦</text></svg>">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;600;700&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        {% block stylesheets %}{% endblock %}
         {% block javascripts %}
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
+    <body class="{% block body_class %}{% endblock %}">
 
-    {% include 'layout/navbar.html.twig' %}
-
-    <div class="container mt-4" id="flash-messages-container">
-        {# On boucle sur tous les messages flash (success, danger, warning) #}
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }} alert-dismissible fade show shadow-sm" role="alert">
-                    {# Icône dynamique selon le type d'erreur #}
-                    {% if label == 'danger' %}
-                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                    {% elseif label == 'success' %}
-                        <i class="bi bi-check-circle-fill me-2"></i>
-                    {% endif %}
-
-                    {{ message|raw }}
-
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
+        {% if app.flashes|length > 0 %}
+            {% for label, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="flash-msg flash-{{ label }}">{{ message|raw }}</div>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </div>
+        {% endif %}
 
-    <body class="container mt-4">
         {% block body %}{% endblock %}
+
     </body>
-
-    {% include 'layout/footer.html.twig' %}
-
 </html>

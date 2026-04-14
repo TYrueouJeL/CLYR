@@ -1,106 +1,143 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ chaussette.NomChaussette|default('Détails de la chaussette') }}{% endblock %}
+{% block title %}CLYR — {{ chaussette.NomChaussette|default('Détail chaussette') }}{% endblock %}
 
 {% block body %}
-    <div class="container my-5" id="show_chaussette">
 
-        {# --- BOUTONS DE NAVIGATION EN HAUT --- #}
-        <div class="d-flex justify-content-between align-items-center mb-4">
-            <a href="{{ path('app_chaussette_index') }}" class="btn btn-outline-secondary shadow-sm">
-                <i class="bi bi-arrow-left"></i> Retour au tiroir
-            </a>
+{% include 'layout/_navbar.html.twig' with { active: 'chaussette' } %}
 
-            <a href="{{ path('app_chaussette_edit', {'id': chaussette.id}) }}" class="btn btn-warning shadow-sm fw-bold text-dark">
-                <i class="bi bi-pencil-square"></i> Tricoter cette chaussette
-            </a>
+<div class="layout">
+
+    {% include 'layout/_sidebar.html.twig' with { active: 'chaussette' } %}
+
+    <main class="explore-main">
+
+        {# ── Fil d'Ariane ── #}
+        <div class="explore-header">
+            <div>
+                <h1 class="explore-title">{{ chaussette.NomChaussette|default('Chaussette sans nom') }}</h1>
+                <p class="explore-sub">Signalée le {{ chaussette.dateCreation ? chaussette.dateCreation|date('d/m/Y') : 'date inconnue' }}</p>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <a href="{{ path('app_chaussette') }}" class="btn-ghost-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                    Retour
+                </a>
+                <a href="{{ path('app_chaussette_modify', {id: chaussette.id}) }}" class="btn-primary-grad">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Modifier
+                </a>
+            </div>
         </div>
 
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
+        <div class="show-layout">
 
-                {# --- CARTE PRINCIPALE --- #}
-                <div class="card shadow border-0 overflow-hidden">
+            {# ── Visuel ── #}
+            {% set couleurNom = chaussette.couleur ? chaussette.couleur.NomCouleur|lower : '' %}
+            {% set couleurClass =
+                'rouge' in couleurNom or 'red' in couleurNom ? 'sock-tile-rouge' :
+                'bleu' in couleurNom or 'blue' in couleurNom or 'marine' in couleurNom ? 'sock-tile-bleu' :
+                'vert' in couleurNom or 'green' in couleurNom ? 'sock-tile-vert' :
+                'violet' in couleurNom or 'purple' in couleurNom ? 'sock-tile-violet' :
+                'jaune' in couleurNom or 'yellow' in couleurNom ? 'sock-tile-jaune' :
+                'noir' in couleurNom or 'black' in couleurNom ? 'sock-tile-noir' :
+                'blanc' in couleurNom or 'white' in couleurNom ? 'sock-tile-blanc' :
+                'rose' in couleurNom or 'pink' in couleurNom ? 'sock-tile-rose' :
+                'sock-tile-default'
+            %}
+            <div class="show-visual {{ couleurClass }}">
+                <span class="show-visual-emoji">🧦</span>
+                <div class="sock-tile-status {{ chaussette.couple ? 'status-couple' : 'status-orphan' }}">
+                    {{ chaussette.couple ? '❤️ En couple' : '🧦 Orpheline' }}
+                </div>
+            </div>
 
-                    {# EN-TÊTE DE LA CARTE #}
-                    <div class="card-header bg-success text-white p-4 text-center border-0">
-                        <i class="bi bi-layers-fill" style="font-size: 3rem; opacity: 0.8;"></i>
-                        <h2 class="mt-2 mb-0 fw-bold">
-                            {{ chaussette.NomChaussette|default('Chaussette sans nom') }}
-                        </h2>
-                        <p class="mb-0 mt-2 text-white-50 small">
-                            Ajoutée le {{ chaussette.dateCreation ? chaussette.dateCreation|date('d/m/Y') : 'Date inconnue' }}
-                        </p>
-                    </div>
+            {# ── Détails ── #}
+            <div class="show-details">
 
-                    <div class="card-body p-5 bg-light">
-
-                        {# BADGE D'ÉTAT (Très visuel) #}
-                        <div class="text-center mb-5">
-                            {% if chaussette.couple %}
-                                <div class="badge bg-success bg-opacity-10 text-success border border-success p-3 rounded-pill fs-5 shadow-sm">
-                                    <i class="bi bi-check-circle-fill me-2"></i> Paire Complète
-                                </div>
-                            {% else %}
-                                <div class="badge bg-warning bg-opacity-10 text-warning border border-warning p-3 rounded-pill fs-5 shadow-sm text-dark">
-                                    <i class="bi bi-exclamation-circle-fill me-2"></i> Chaussette Orpheline
-                                </div>
-                            {% endif %}
+                <div class="show-card">
+                    <div class="show-card-title">Caractéristiques</div>
+                    <div class="show-props">
+                        <div class="show-prop">
+                            <span class="show-prop-key">Type</span>
+                            <span class="show-prop-val">{{ chaussette.type ? chaussette.type.NomType : '—' }}</span>
                         </div>
-
-                        {# GRILLE D'INFORMATIONS #}
-                        <div class="row g-4 mb-4">
-
-                            {# TYPE #}
-                            <div class="col-md-4 text-center">
-                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
-                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-tag"></i> Type</h6>
-                                    <p class="fs-5 fw-bold mb-0 text-dark">
-                                        {{ chaussette.type ? chaussette.type.NomType : '<span class="text-muted fst-italic">Non défini</span>'|raw }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {# COULEUR #}
-                            <div class="col-md-4 text-center">
-                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
-                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-palette"></i> Couleur</h6>
-                                    <p class="fs-5 fw-bold mb-0 text-dark">
-                                        {{ chaussette.couleur ? chaussette.couleur.NomCouleur : '<span class="text-muted fst-italic">Non définie</span>'|raw }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            {# TAILLE #}
-                            <div class="col-md-4 text-center">
-                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
-                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-rulers"></i> Taille</h6>
-                                    <p class="fs-5 fw-bold mb-0 text-dark">
-                                        {{ chaussette.taille|default('<span class="text-muted fst-italic">?</span>')|raw }}
-                                    </p>
-                                </div>
-                            </div>
-
+                        <div class="show-prop">
+                            <span class="show-prop-key">Couleur</span>
+                            <span class="show-prop-val">{{ chaussette.couleur ? chaussette.couleur.NomCouleur : '—' }}</span>
                         </div>
-
-                        {# SECTION COMMENTAIRE #}
-                        <div class="card border-0 bg-white shadow-sm mt-4">
-                            <div class="card-body p-4">
-                                <h5 class="text-success fw-bold border-bottom pb-2 mb-3">
-                                    <i class="bi bi-journal-text me-2"></i> Notes & Commentaires
-                                </h5>
-                                {% if chaussette.Commentaire %}
-                                    <p class="mb-0 text-dark" style="white-space: pre-line;">{{ chaussette.Commentaire }}</p>
+                        <div class="show-prop">
+                            <span class="show-prop-key">Taille</span>
+                            <span class="show-prop-val">{{ chaussette.taille|default('—') }}</span>
+                        </div>
+                        <div class="show-prop">
+                            <span class="show-prop-key">Statut</span>
+                            <span class="show-prop-val">
+                                {% if chaussette.couple %}
+                                    <span style="color:#4fffb8;">En couple ❤️</span>
                                 {% else %}
-                                    <p class="mb-0 text-muted fst-italic">Aucun commentaire enregistré pour cette chaussette.</p>
+                                    <span style="color:#ff8899;">Orpheline 🧦</span>
                                 {% endif %}
-                            </div>
+                            </span>
                         </div>
-
+                        <div class="show-prop">
+                            <span class="show-prop-key">Signalée le</span>
+                            <span class="show-prop-val">{{ chaussette.dateCreation ? chaussette.dateCreation|date('d/m/Y') : '—' }}</span>
+                        </div>
                     </div>
                 </div>
 
+                {% if chaussette.Commentaire %}
+                <div class="show-card">
+                    <div class="show-card-title">Notes & Commentaires</div>
+                    <p class="show-comment">{{ chaussette.Commentaire }}</p>
+                </div>
+                {% endif %}
+
+                {# ── Actions admin ── #}
+                {% if is_granted('ROLE_ADMIN') %}
+                <div class="show-card show-danger-zone">
+                    <div class="show-card-title" style="color:#ff8899;">Zone dangereuse</div>
+                    <p style="font-size:.82rem;color:var(--text-3);margin-bottom:12px;">La suppression est irréversible.</p>
+                    <form method="post" action="{{ path('app_chaussette_delete', {id: chaussette.id}) }}" onsubmit="return confirm('Supprimer définitivement cette chaussette ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chaussette.id) }}">
+                        <button type="submit" class="btn-danger-outline">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                            Supprimer la chaussette
+                        </button>
+                    </form>
+                </div>
+                {% endif %}
+
             </div>
         </div>
-    </div>
+
+    </main>
+
+    <aside class="sidebar-right">
+        <div class="right-card">
+            <div class="section-title">Actions rapides</div>
+            <div style="display:flex;flex-direction:column;gap:8px;">
+                <a href="{{ path('app_chaussette_modify', {id: chaussette.id}) }}" class="sidebar-action-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                    Modifier cette chaussette
+                </a>
+                <a href="{{ path('app_chaussette_create') }}" class="sidebar-action-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Signaler une autre
+                </a>
+                <a href="{{ path('app_chaussette') }}" class="sidebar-action-btn">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                    Voir toutes les chaussettes
+                </a>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#">À propos</a> · <a href="#">Aide</a> · <a href="#">CGU</a><br>
+            © 2026 CLYR
+        </div>
+    </aside>
+
+</div>
+
 {% endblock %}

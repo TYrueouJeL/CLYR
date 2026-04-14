@@ -15,4 +15,10 @@ final class HomeController extends AbstractController
             'controller_name' => 'HomeController',
         ]);
     }
+
+    #[Route('/match', name: 'app_match')]
+    public function match(): Response
+    {
+        return $this->render('match/index.html.twig');
+    }
 }

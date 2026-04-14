@@ -1,108 +1,147 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}CLYR — Signaler une chaussette{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('js/chaussette_form.js') }}" defer></script>
 {% endblock %}
 
-{% block title %}Nouvelle Chaussette{% endblock %}
-
 {% block body %}
-    <div class="container my-5" id="new_chaussette">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
 
-                {# En-tête principal #}
-                <div class="card shadow border-0 mb-4">
-                    <div class="card-header bg-success text-white p-3 d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0 fs-4"><i class="bi bi-plus-circle"></i> Ajouter une chaussette</h3>
-                        <span class="badge bg-light text-success">Mode Création</span>
+{% include 'layout/_navbar.html.twig' with { active: 'chaussette' } %}
+
+<div class="layout">
+
+    {% include 'layout/_sidebar.html.twig' with { active: 'chaussette' } %}
+
+    <main class="explore-main">
+
+        <div class="explore-header">
+            <div>
+                <h1 class="explore-title">Signaler une chaussette</h1>
+                <p class="explore-sub">Aide la communauté à retrouver son binôme</p>
+            </div>
+            <a href="{{ path('app_chaussette') }}" class="btn-ghost-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Retour au tiroir
+            </a>
+        </div>
+
+        <div class="form-card">
+
+            {{ form_start(form, { attr: { class: 'sock-form', novalidate: 'novalidate' } }) }}
+
+            {# ── Identification ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    Identification
+                </div>
+                <div class="form-hint">Laisse le nom vide pour en générer un automatiquement (ex : Chaussette_42)</div>
+                <div class="sock-field">
+                    {{ form_label(form.NomChaussette, 'Nom', { label_attr: { class: 'sock-label' } }) }}
+                    {{ form_widget(form.NomChaussette, { attr: { class: 'sock-input', placeholder: 'Ex : Chaussette fétiche du dimanche' } }) }}
+                    {% for error in form.NomChaussette.vars.errors %}
+                        <div class="sock-error">{{ error.message }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Caractéristiques ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    Caractéristiques
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.type, 'Type', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.type, { attr: { class: 'sock-input sock-select' } }) }}
+                        {% for error in form.type.vars.errors %}
+                            <div class="sock-error">{{ error.message }}</div>
+                        {% endfor %}
                     </div>
-
-                    <div class="card-body p-4">
-                        {{ form_start(form) }}
-
-                        {# ================================================================= #}
-                        {# 1. IDENTIFICATION #}
-                        {# ================================================================= #}
-                        <h5 class="text-success border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i> Identification</h5>
-
-                        <div class="row mb-4">
-                            <div class="col-md-12 mb-3">
-                                <div class="alert alert-info py-2 small mb-3">
-                                    <i class="bi bi-info-circle-fill"></i> Laissez le nom vide pour générer un nom automatique (ex: Chaussette_42).
-                                </div>
-                                {{ form_row(form.NomChaussette, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Chaussette fétiche du dimanche'}}) }}
-                            </div>
-                        </div>
-
-                        {# ================================================================= #}
-                        {# 2. CARACTÉRISTIQUES #}
-                        {# ================================================================= #}
-                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4"><i class="bi bi-palette-fill"></i> Caractéristiques</h5>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_row(form.couleur, {'attr': {'class': 'form-select'}}) }}
-                            </div>
-                        </div>
-
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                {{ form_row(form.taille, {'attr': {'class': 'form-control', 'list': 'list_tailles', 'placeholder': 'Ex: 38-40'}}) }}
-                                {# DATALIST pour l'autocomplétion des tailles déjà existantes #}
-                                <datalist id="list_tailles">
-                                    {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
-                                </datalist>
-                            </div>
-                            <div class="col-md-6 d-flex align-items-center pt-md-3">
-                                {# Affichage sous forme de joli switch pour le statut couple/orpheline #}
-                                <div class="form-check form-switch fs-5">
-                                    {{ form_widget(form.couple, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
-                                    {{ form_label(form.couple, 'Paire complète ?', {'label_attr': {'class': 'form-check-label ms-2 fw-bold text-success'}}) }}
-                                </div>
-                            </div>
-                        </div>
-
-                        {# ================================================================= #}
-                        {# 3. HISTORIQUE & NOTES #}
-                        {# ================================================================= #}
-                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4"><i class="bi bi-journal-text"></i> Historique & Notes</h5>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form_row(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form_row(form.Commentaire, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Un trou à signaler ? Une histoire particulière ?'}}) }}
-                        </div>
-
-                        {# ================================================================= #}
-                        {# BOUTONS D'ACTION #}
-                        {# ================================================================= #}
-                        <div class="d-grid gap-2 mt-5">
-                            <button type="submit" class="btn btn-success btn-lg py-3 shadow">
-                                <i class="bi bi-check-circle-fill"></i> RANGER LA CHAUSSETTE
-                            </button>
-                            {# N'oublie pas d'adapter la route vers ton index #}
-                            <a href="{{ path('app_chaussette') }}" class="btn btn-outline-secondary">
-                                <i class="bi bi-arrow-left"></i> Annuler et Retourner au tiroir
-                            </a>
-                        </div>
-
-                        <div class="d-none">
-                            {{ form_rest(form) }}
-                        </div>
-
-                        {{ form_end(form) }}
+                    <div class="sock-field">
+                        {{ form_label(form.couleur, 'Couleur', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.couleur, { attr: { class: 'sock-input sock-select' } }) }}
+                        {% for error in form.couleur.vars.errors %}
+                            <div class="sock-error">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.taille, 'Taille', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.taille, { attr: { class: 'sock-input', list: 'list_tailles', placeholder: 'Ex : 38-40' } }) }}
+                        <datalist id="list_tailles">
+                            {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
+                        </datalist>
+                        {% for error in form.taille.vars.errors %}
+                            <div class="sock-error">{{ error.message }}</div>
+                        {% endfor %}
+                    </div>
+                    <div class="sock-field sock-field-switch">
+                        <span class="sock-label">Statut</span>
+                        <label class="sock-switch-wrap">
+                            {{ form_widget(form.couple, { attr: { class: 'sock-switch-input' } }) }}
+                            <span class="sock-switch-track">
+                                <span class="sock-switch-thumb"></span>
+                            </span>
+                            <span class="sock-switch-label">Paire complète ?</span>
+                        </label>
                     </div>
                 </div>
             </div>
+
+            {# ── Historique ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    Historique & Notes
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.dateCreation, 'Date de signalement', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.dateCreation, { attr: { class: 'sock-input' } }) }}
+                    </div>
+                </div>
+                <div class="sock-field">
+                    {{ form_label(form.Commentaire, 'Commentaire', { label_attr: { class: 'sock-label' } }) }}
+                    {{ form_widget(form.Commentaire, { attr: { class: 'sock-input sock-textarea', rows: 3, placeholder: 'Un trou à signaler ? Une histoire particulière ?' } }) }}
+                </div>
+            </div>
+
+            {# ── Actions ── #}
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-grad">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Ranger la chaussette
+                </button>
+                <a href="{{ path('app_chaussette') }}" class="btn-outline-cancel">Annuler</a>
+            </div>
+
+            <div class="d-none">{{ form_rest(form) }}</div>
+            {{ form_end(form) }}
+
         </div>
-    </div>
+
+    </main>
+
+    <aside class="sidebar-right">
+        <div class="right-card">
+            <div class="section-title">Conseils</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:.82rem;color:var(--text-2);line-height:1.6;">
+                <p>🧦 Sois précis sur la couleur et la taille pour maximiser les chances de retrouver le binôme.</p>
+                <p>📍 Ajoute un commentaire avec le lieu de découverte si tu t'en souviens.</p>
+                <p>❤️ Une chaussette signalée = une chance de réunir une paire !</p>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#">À propos</a> · <a href="#">Aide</a> · <a href="#">CGU</a><br>
+            © 2026 CLYR
+        </div>
+    </aside>
+
+</div>
+
 {% endblock %}

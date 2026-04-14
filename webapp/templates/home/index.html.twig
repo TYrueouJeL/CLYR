@@ -1,20 +1,165 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}CLYR — Fil d'actualité{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{% include 'layout/_navbar.html.twig' with { active: 'home' } %}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/wamp64/www/CLYR/webapp/src/Controller/HomeController.php</code></li>
-        <li>Your template at <code>C:/wamp64/www/CLYR/webapp/templates/home/index.html.twig</code></li>
-    </ul>
+<div class="layout">
+
+    {% include 'layout/_sidebar.html.twig' with { active: 'home' } %}
+
+    <main class="feed">
+
+        {# Stories #}
+        <section class="stories">
+            <div class="story-item"><div class="story-bg story-add-bg"><div class="story-add-icon">+</div><div class="story-add-label">Signaler une chaussette</div></div></div>
+            <div class="story-item"><div class="story-bg" style="background:linear-gradient(160deg,#ff6b6b,#ee5a24);"><div class="story-avatar"><span style="font-size:18px">🧦</span></div><div class="story-name">Rayée rouge</div></div></div>
+            <div class="story-item"><div class="story-bg" style="background:linear-gradient(160deg,#a29bfe,#6c5ce7);"><div class="story-avatar"><span style="font-size:18px">🧦</span></div><div class="story-name">Violette étoiles</div></div></div>
+            <div class="story-item"><div class="story-bg" style="background:linear-gradient(160deg,#55efc4,#00b894);"><div class="story-avatar"><span style="font-size:18px">🧦</span></div><div class="story-name">Verte unie</div></div></div>
+            <div class="story-item"><div class="story-bg" style="background:linear-gradient(160deg,#ffeaa7,#fdcb6e);"><div class="story-avatar"><span style="font-size:18px">🧦</span></div><div class="story-name">Jaune pois</div></div></div>
+            <div class="story-item"><div class="story-bg" style="background:linear-gradient(160deg,#74b9ff,#0984e3);"><div class="story-avatar"><span style="font-size:18px">🧦</span></div><div class="story-name">Bleue marine</div></div></div>
+        </section>
+
+        {# Composer #}
+        <div class="composer">
+            <div class="composer-top">
+                <div class="avatar-sm">{{ app.user ? app.user.email|first|upper : '?' }}</div>
+                <input class="composer-input" type="text" placeholder="Signaler une chaussette perdue…">
+            </div>
+            <div class="composer-actions">
+                <button class="composer-btn photo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg><span>Photo</span></button>
+                <button class="composer-btn video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg><span>Vidéo</span></button>
+                <button class="composer-btn mood"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg><span>Localisation</span></button>
+            </div>
+        </div>
+
+        {# Post 1 — perdue #}
+        <article class="post-card">
+            <div class="post-header">
+                <div class="post-avatar-placeholder">L</div>
+                <div class="post-meta">
+                    <div class="post-author">Lucie Martin <span class="verified">✦</span></div>
+                    <div class="post-info"><span>il y a 23 min</span><span>·</span><span class="post-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Public</span></div>
+                </div>
+                <button class="post-menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+            </div>
+            <div class="post-text">🧦 <strong>CHAUSSETTE PERDUE</strong> — Ma chaussette rayée rouge et blanche a disparu dans le vortex de ma machine à laver. Elle répond au doux nom de <strong>« Rougette »</strong>.<br><br>Taille 40, légère usure au talon gauche. Dernière fois vue dans un tambour Bosch. <a href="#">#ChaussetteMissingRougette</a> <a href="#">#VieMaLaverie</a></div>
+            <div class="post-stats">
+                <div style="display:flex;align-items:center;gap:6px;"><div class="reactions-icons"><div class="reaction-icon">😢</div><div class="reaction-icon">❤️</div><div class="reaction-icon">😂</div></div><span>47 réactions</span></div>
+                <div class="stats-right"><span>12 commentaires</span><span>3 partages</span></div>
+            </div>
+            <div class="post-actions">
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>J'ai le binôme !</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Commenter</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager</button>
+            </div>
+            <div class="post-comments">
+                <div class="comment">
+                    <div class="post-avatar-placeholder" style="width:34px;height:34px;font-size:13px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,#a29bfe,#6c5ce7);display:grid;place-items:center;color:#fff;font-weight:700;">T</div>
+                    <div class="comment-body"><div class="comment-author">Thomas D.</div><div class="comment-text">Même problème avec ma chaussette noire Adidas… La machine à laver est un portail dimensionnel 😭</div><div class="comment-actions"><span>J'aime</span><span>Répondre</span><span style="margin-left:auto;font-weight:400;">il y a 18 min</span></div></div>
+                </div>
+                <div class="comment-input-wrap">
+                    <div class="avatar-sm" style="flex-shrink:0;">{{ app.user ? app.user.email|first|upper : '?' }}</div>
+                    <input class="comment-input" type="text" placeholder="Écrire un commentaire…">
+                </div>
+            </div>
+        </article>
+
+        {# Post 2 — retrouvée #}
+        <article class="post-card">
+            <div class="post-header">
+                <div class="post-avatar-placeholder" style="background:linear-gradient(135deg,#00b894,#55efc4);">A</div>
+                <div class="post-meta">
+                    <div class="post-author">Antoine B.</div>
+                    <div class="post-info"><span>il y a 2 h</span><span>·</span><span class="post-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>Public</span></div>
+                </div>
+                <button class="post-menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+            </div>
+            <div style="margin:0 12px 12px;padding:20px;border-radius:12px;background:linear-gradient(135deg,rgba(0,184,148,.18),rgba(85,239,196,.1));border:1px solid rgba(0,184,148,.25);">
+                <p class="post-text large" style="padding:0;color:#4fffcb;">🎉 RETROUVÉE ! Ma chaussette verte était coincée derrière le tambour depuis 3 semaines. Je suis en larmes. ❤️</p>
+            </div>
+            <div class="post-stats">
+                <div style="display:flex;align-items:center;gap:6px;"><div class="reactions-icons"><div class="reaction-icon">🎉</div><div class="reaction-icon">❤️</div></div><span>124 réactions</span></div>
+                <div class="stats-right"><span>34 commentaires</span></div>
+            </div>
+            <div class="post-actions">
+                <button class="post-action-btn liked"><svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>Féliciter !</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Commenter</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager</button>
+            </div>
+        </article>
+
+        {# Suggestions #}
+        <div class="suggested-bar">
+            <div class="section-title">Chaussettes à adopter près de chez vous</div>
+            <div class="suggested-list">
+                <div class="suggested-person"><button class="suggested-person-close">✕</button><div class="suggested-av" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);font-size:26px;">🧦</div><div class="suggested-pname">Rayée Rouge</div><div class="suggested-mutual">T.42 · Nike</div><button class="btn-follow">Adopter</button></div>
+                <div class="suggested-person"><button class="suggested-person-close">✕</button><div class="suggested-av" style="background:linear-gradient(135deg,#a29bfe,#6c5ce7);font-size:26px;">🧦</div><div class="suggested-pname">Violette</div><div class="suggested-mutual">T.38 · H&amp;M</div><button class="btn-follow">Adopter</button></div>
+                <div class="suggested-person"><button class="suggested-person-close">✕</button><div class="suggested-av" style="background:linear-gradient(135deg,#74b9ff,#0984e3);font-size:26px;">🧦</div><div class="suggested-pname">Bleue Unie</div><div class="suggested-mutual">T.40 · Decathlon</div><button class="btn-follow">Adopter</button></div>
+                <div class="suggested-person"><button class="suggested-person-close">✕</button><div class="suggested-av" style="background:linear-gradient(135deg,#ffeaa7,#fdcb6e);font-size:26px;">🧦</div><div class="suggested-pname">Jaune Pois</div><div class="suggested-mutual">T.36 · Kindy</div><button class="btn-follow">Adopter</button></div>
+                <div class="suggested-person"><button class="suggested-person-close">✕</button><div class="suggested-av" style="background:linear-gradient(135deg,#1e3c72,#2a5298);font-size:26px;">🧦</div><div class="suggested-pname">Noire Noël</div><div class="suggested-mutual">T.44 · Dim</div><button class="btn-follow">Adopter</button></div>
+            </div>
+        </div>
+
+        {# Post 3 — humour #}
+        <article class="post-card">
+            <div class="post-header">
+                <div class="post-avatar-placeholder" style="background:linear-gradient(135deg,#f9ca24,#f0932b);">S</div>
+                <div class="post-meta">
+                    <div class="post-author">Sophie K.</div>
+                    <div class="post-info"><span>hier à 19h42</span><span>·</span><span class="post-privacy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Amis</span></div>
+                </div>
+                <button class="post-menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="12" cy="19" r="1.5"/></svg></button>
+            </div>
+            <div class="post-text">Ça fait 47 chaussettes perdues en 2 ans. Ma théorie : il existe un univers parallèle de chaussettes célibataires.<br><br>Ce soir j'embrasse ma vie de chaussettes impaires. Je suis libre. 🧦✨<br><br><a href="#">#ChaussettesLibres</a> <a href="#">#VieMaLaverie</a> <a href="#">#SockLife</a></div>
+            <div class="post-stats">
+                <div style="display:flex;align-items:center;gap:6px;"><div class="reactions-icons"><div class="reaction-icon">😂</div><div class="reaction-icon">❤️</div><div class="reaction-icon">👏</div></div><span>312 réactions</span></div>
+                <div class="stats-right"><span>87 commentaires</span><span>42 partages</span></div>
+            </div>
+            <div class="post-actions">
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>J'ai le binôme !</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>Commenter</button>
+                <button class="post-action-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Partager</button>
+            </div>
+        </article>
+
+    </main>
+
+    <aside class="sidebar-right">
+        <div class="right-card">
+            <div class="section-title">Chaussettes en ligne</div>
+            <div class="online-list">
+                <div class="online-item"><div class="online-av" style="background:linear-gradient(135deg,#ff6b6b,#ee5a24);"><span style="font-size:16px;position:relative;z-index:1;">🧦</span><div class="online-dot"></div></div><span class="online-name">Rougette</span><span class="online-time">en ligne</span></div>
+                <div class="online-item"><div class="online-av" style="background:linear-gradient(135deg,#a29bfe,#6c5ce7);"><span style="font-size:16px;position:relative;z-index:1;">🧦</span><div class="online-dot"></div></div><span class="online-name">Violette Étoiles</span><span class="online-time">2 min</span></div>
+                <div class="online-item"><div class="online-av" style="background:linear-gradient(135deg,#74b9ff,#0984e3);"><span style="font-size:16px;position:relative;z-index:1;">🧦</span><div class="online-dot" style="background:#e17055;"></div></div><span class="online-name">Chaussette Marine</span><span class="online-time">1 h</span></div>
+            </div>
+        </div>
+        <div class="right-card">
+            <div class="section-title">Tendances</div>
+            <div class="trend-list">
+                <div class="trend-item"><span class="trend-tag">#VieMaLaverie</span><span class="trend-count">2.4k</span></div>
+                <div class="trend-item"><span class="trend-tag">#ChaussetteMissing</span><span class="trend-count">1.8k</span></div>
+                <div class="trend-item"><span class="trend-tag">#SockLife</span><span class="trend-count">987</span></div>
+                <div class="trend-item"><span class="trend-tag">#MachineLaver</span><span class="trend-count">754</span></div>
+            </div>
+        </div>
+        <div class="right-card">
+            <div class="section-title">Statistiques</div>
+            <div style="display:flex;flex-direction:column;gap:10px;font-size:.82rem;color:var(--text-2);">
+                <div style="display:flex;justify-content:space-between;"><span>Perdues</span><strong style="color:#FF4458;">18 472</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Retrouvées ce mois</span><strong style="color:#45b87c;">1 234</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Paires reconstituées</span><strong style="color:var(--text);">607</strong></div>
+                <div style="display:flex;justify-content:space-between;"><span>Membres actifs</span><strong style="color:var(--text);">9 108</strong></div>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <a href="#">À propos</a> · <a href="#">Aide</a> · <a href="#">CGU</a><br>
+            © 2026 CLYR
+        </div>
+    </aside>
+
 </div>
+
 {% endblock %}

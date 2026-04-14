@@ -1,185 +1,166 @@
 {% extends 'base.html.twig' %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script src="{{ asset('js/chaussette_form.js') }}" defer></script>
-{% endblock %}
-
-{% block title %}Modifier : {{ chaussette.NomChaussette|default('Chaussette') }}{% endblock %}
+{% block title %}CLYR — Modifier : {{ chaussette.NomChaussette|default('Chaussette') }}{% endblock %}
 
 {% block body %}
-    <div class="container my-5" id="edit_chaussette">
-        <div class="row justify-content-center">
-            <div class="col-lg-8"> {# Toujours réduit à 8 car on a moins de champs #}
 
-                {# En-tête principal : PASSÉ EN WARNING POUR LA MODIFICATION #}
-                <div class="card shadow border-0 mb-4">
-                    <div class="card-header bg-warning text-dark p-3 d-flex justify-content-between align-items-center">
-                        <h3 class="mb-0 fs-4 fw-bold"><i class="bi bi-pencil-square"></i> Modifier : {{ chaussette.NomChaussette|default('Sans nom') }}</h3>
+{% include 'layout/_navbar.html.twig' with { active: 'chaussette' } %}
 
-                        <div class="d-flex align-items-center gap-3">
-                            <span class="badge bg-light text-warning border border-warning">Mode Modification</span>
+<div class="layout">
 
-                            {# BOUTON QUI OUVRE LA FENÊTRE DE SUPPRESSION (RÉSERVÉ AUX ADMINS) #}
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <button type="button" class="btn btn-danger btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalSuppression">
-                                    <i class="bi bi-trash3-fill"></i> DÉTRUIRE
-                                </button>
-                            {% endif %}
-                        </div>
+    {% include 'layout/_sidebar.html.twig' with { active: 'chaussette' } %}
+
+    <main class="explore-main">
+
+        <div class="explore-header">
+            <div>
+                <h1 class="explore-title">Modifier la chaussette</h1>
+                <p class="explore-sub">{{ chaussette.NomChaussette|default('Sans nom') }}</p>
+            </div>
+            <a href="{{ path('app_chaussette_show', {id: chaussette.id}) }}" class="btn-ghost-back">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Retour à la fiche
+            </a>
+        </div>
+
+        <div class="form-card">
+
+            {{ form_start(form, { attr: { class: 'sock-form', id: 'form-edit-chaussette', novalidate: 'novalidate' } }) }}
+
+            {# ── Identification ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    Identification
+                </div>
+                <div class="sock-field">
+                    {{ form_label(form.NomChaussette, 'Nom', { label_attr: { class: 'sock-label' } }) }}
+                    {{ form_widget(form.NomChaussette, { attr: { class: 'sock-input' } }) }}
+                    {% for error in form.NomChaussette.vars.errors %}
+                        <div class="sock-error">{{ error.message }}</div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {# ── Caractéristiques ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                    Caractéristiques
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.type, 'Type', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.type, { attr: { class: 'sock-input sock-select' } }) }}
                     </div>
+                    <div class="sock-field">
+                        {{ form_label(form.couleur, 'Couleur', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.couleur, { attr: { class: 'sock-input sock-select' } }) }}
+                    </div>
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.taille, 'Taille', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.taille, { attr: { class: 'sock-input', list: 'list_tailles' } }) }}
+                        <datalist id="list_tailles">
+                            {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
+                        </datalist>
+                    </div>
+                    <div class="sock-field sock-field-switch">
+                        <span class="sock-label">Statut</span>
+                        <label class="sock-switch-wrap">
+                            {{ form_widget(form.couple, { attr: { class: 'sock-switch-input' } }) }}
+                            <span class="sock-switch-track">
+                                <span class="sock-switch-thumb"></span>
+                            </span>
+                            <span class="sock-switch-label">Paire complète ?</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
 
-                    <div class="card-body p-4">
+            {# ── Historique ── #}
+            <div class="form-section">
+                <div class="form-section-title">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    Historique & Notes
+                </div>
+                <div class="sock-row">
+                    <div class="sock-field">
+                        {{ form_label(form.dateCreation, 'Date de signalement', { label_attr: { class: 'sock-label' } }) }}
+                        {{ form_widget(form.dateCreation, { attr: { class: 'sock-input' } }) }}
+                    </div>
+                </div>
+                <div class="sock-field">
+                    {{ form_label(form.Commentaire, 'Commentaire', { label_attr: { class: 'sock-label' } }) }}
+                    {{ form_widget(form.Commentaire, { attr: { class: 'sock-input sock-textarea', rows: 3 } }) }}
+                </div>
+            </div>
 
-                        {{ form_start(form, {'attr': {'id': 'form-edit-chaussette'}}) }}
+            {# ── Actions ── #}
+            <div class="form-actions">
+                <button type="submit" class="btn-primary-grad">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Enregistrer les modifications
+                </button>
+                <a href="{{ path('app_chaussette_show', {id: chaussette.id}) }}" class="btn-outline-cancel">Annuler</a>
 
-                        {# ================================================================= #}
-                        {# 1. IDENTIFICATION #}
-                        {# ================================================================= #}
-                        <h5 class="text-warning border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i> Identification</h5>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <form method="post" action="{{ path('app_chaussette_delete', {id: chaussette.id}) }}" style="margin-left:auto;" onsubmit="return confirm('Supprimer définitivement cette chaussette ?')">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chaussette.id) }}">
+                        <button type="submit" class="btn-danger-outline">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+                            Supprimer
+                        </button>
+                    </form>
+                {% endif %}
+            </div>
 
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                {{ form_row(form.NomChaussette, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                        </div>
+            <div class="d-none">{{ form_rest(form) }}</div>
+            {{ form_end(form) }}
 
-                        {# ================================================================= #}
-                        {# 2. CARACTÉRISTIQUES #}
-                        {# ================================================================= #}
-                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4"><i class="bi bi-palette-fill"></i> Caractéristiques</h5>
+        </div>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
-                            </div>
-                            <div class="col-md-6">
-                                {{ form_row(form.couleur, {'attr': {'class': 'form-select'}}) }}
-                            </div>
-                        </div>
+    </main>
 
-                        <div class="row mb-4">
-                            <div class="col-md-6">
-                                {{ form_row(form.taille, {'attr': {'class': 'form-control', 'list': 'list_tailles'}}) }}
-                                <datalist id="list_tailles">
-                                    {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
-                                </datalist>
-                            </div>
-                            <div class="col-md-6 d-flex align-items-center pt-md-3">
-                                <div class="form-check form-switch fs-5">
-                                    {{ form_widget(form.couple, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
-                                    {{ form_label(form.couple, 'Paire complète ?', {'label_attr': {'class': 'form-check-label ms-2 fw-bold text-warning'}}) }}
-                                </div>
-                            </div>
-                        </div>
-
-                        {# ================================================================= #}
-                        {# 3. HISTORIQUE & NOTES #}
-                        {# ================================================================= #}
-                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4"><i class="bi bi-journal-text"></i> Historique & Notes</h5>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                {{ form_row(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            {{ form_row(form.Commentaire, {'attr': {'class': 'form-control', 'rows': 3}}) }}
-                        </div>
-
-                        {# ================================================================= #}
-                        {# BOUTONS FINAUX #}
-                        {# ================================================================= #}
-                        <div class="d-grid gap-2 mt-5">
-                            <button type="button" id="btn-pre-submit" class="btn btn-warning btn-lg py-3 shadow fw-bold text-dark">
-                                <i class="bi bi-save-fill"></i> ENREGISTRER LES MODIFICATIONS
-                            </button>
-                            <a href="{{ path('app_chaussette_show', {'id': chaussette.id}) }}" class="btn btn-outline-secondary mt-2">
-                                <i class="bi bi-x-circle"></i> Annuler et retourner à la fiche
-                            </a>
-                        </div>
-
-                        {# LE BOUTON FANTÔME POUR OUVRIR LA MODALE #}
-                        <button type="button" id="btn-hidden-modal-trigger" class="d-none" data-bs-toggle="modal" data-bs-target="#modalModification"></button>
-
-                        <div class="d-none">
-                            {{ form_rest(form) }}
-                        </div>
-
-                        {{ form_end(form) }}
+    <aside class="sidebar-right">
+        <div class="right-card">
+            <div class="section-title">Aperçu actuel</div>
+            {% set couleurNom = chaussette.couleur ? chaussette.couleur.NomCouleur|lower : '' %}
+            {% set couleurClass =
+                'rouge' in couleurNom or 'red' in couleurNom ? 'sock-tile-rouge' :
+                'bleu' in couleurNom or 'blue' in couleurNom or 'marine' in couleurNom ? 'sock-tile-bleu' :
+                'vert' in couleurNom or 'green' in couleurNom ? 'sock-tile-vert' :
+                'violet' in couleurNom or 'purple' in couleurNom ? 'sock-tile-violet' :
+                'jaune' in couleurNom or 'yellow' in couleurNom ? 'sock-tile-jaune' :
+                'noir' in couleurNom or 'black' in couleurNom ? 'sock-tile-noir' :
+                'blanc' in couleurNom or 'white' in couleurNom ? 'sock-tile-blanc' :
+                'rose' in couleurNom or 'pink' in couleurNom ? 'sock-tile-rose' :
+                'sock-tile-default'
+            %}
+            <div class="sock-tile" style="max-width:180px;margin:0 auto;">
+                <div class="sock-tile-visual {{ couleurClass }}">
+                    <span class="sock-tile-emoji">🧦</span>
+                    <div class="sock-tile-status {{ chaussette.couple ? 'status-couple' : 'status-orphan' }}">
+                        {{ chaussette.couple ? '❤️' : '🧦' }}
+                    </div>
+                </div>
+                <div class="sock-tile-body">
+                    <div class="sock-tile-name">{{ chaussette.NomChaussette|default('Sans nom') }}</div>
+                    <div class="sock-tile-details">
+                        {% if chaussette.type %}<span class="sock-detail-pill">{{ chaussette.type.NomType }}</span>{% endif %}
+                        {% if chaussette.couleur %}<span class="sock-detail-pill">{{ chaussette.couleur.NomCouleur }}</span>{% endif %}
+                        {% if chaussette.taille %}<span class="sock-detail-pill">T.{{ chaussette.taille }}</span>{% endif %}
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-
-    {# ================================================================= #}
-    {# FENÊTRE MODALE DE CONFIRMATION DE MODIFICATION #}
-    {# ================================================================= #}
-    <div class="modal fade" id="modalModification" tabindex="-1" aria-labelledby="modalModificationLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-warning shadow-lg">
-
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title fw-bold" id="modalModificationLabel">
-                        <i class="bi bi-question-circle-fill me-2"></i> Confirmation
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                </div>
-
-                <div class="modal-body text-center p-4">
-                    <i class="bi bi-pencil-square text-warning" style="font-size: 3rem;"></i>
-                    <p class="fs-5 mt-3 fw-bold text-dark">Enregistrer les modifications ?</p>
-                    <p class="text-muted small mb-0">Vous êtes sur le point de mettre à jour <strong>{{ chaussette.NomChaussette|default('cette chaussette') }}</strong>.</p>
-                </div>
-
-                <div class="modal-footer bg-light justify-content-center">
-                    <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Annuler</button>
-                    <button type="button" id="btn-final-submit" class="btn btn-warning fw-bold px-4 shadow text-dark">
-                        <i class="bi bi-check-circle-fill me-1"></i> Oui, enregistrer
-                    </button>
-                </div>
-
-            </div>
+        <div class="sidebar-footer">
+            <a href="#">À propos</a> · <a href="#">Aide</a> · <a href="#">CGU</a><br>
+            © 2026 CLYR
         </div>
-    </div>
+    </aside>
 
-    {# ================================================================= #}
-    {# FENÊTRE MODALE DE CONFIRMATION DE SUPPRESSION (RÉSERVÉ ADMIN) #}
-    {# ================================================================= #}
-    {% if is_granted('ROLE_ADMIN') %}
-        <div class="modal fade" id="modalSuppression" tabindex="-1" aria-labelledby="modalSuppressionLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-danger shadow-lg">
-
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title fw-bold" id="modalSuppressionLabel">
-                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Zone de Danger
-                        </h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
-                    </div>
-
-                    <div class="modal-body text-center p-4">
-                        <i class="bi bi-trash3 text-danger" style="font-size: 3rem;"></i>
-                        <p class="fs-5 mt-3 fw-bold text-dark">Voulez-vous vraiment jeter cette chaussette ?</p>
-                        <p class="text-muted small mb-0">Toutes les informations seront supprimées de la base de données. <strong>Cette action est irréversible.</strong></p>
-                    </div>
-
-                    <div class="modal-footer bg-light justify-content-center">
-                        <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Annuler</button>
-
-                        <form method="post" action="{{ path('app_chaussette_delete', {'id': chaussette.id}) }}" class="m-0">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chaussette.id) }}">
-                            <button type="submit" class="btn btn-danger fw-bold px-4 shadow">
-                                <i class="bi bi-check-circle-fill me-1"></i> Oui, jeter définitivement
-                            </button>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    {% endif %}
+</div>
 
 {% endblock %}
