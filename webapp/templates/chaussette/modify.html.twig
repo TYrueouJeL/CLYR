@@ -169,7 +169,6 @@
                     <div class="modal-footer bg-light justify-content-center">
                         <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Annuler</button>
 
-                        {#TODO: Attention à bien créer cette route (app_chaussette_delete) dans ton contrôleur ! #}
                         <form method="post" action="{{ path('app_chaussette_delete', {'id': chaussette.id}) }}" class="m-0">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chaussette.id) }}">
                             <button type="submit" class="btn btn-danger fw-bold px-4 shadow">
