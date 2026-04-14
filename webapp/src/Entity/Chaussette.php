@@ -20,17 +20,14 @@ class Chaussette
     #[ORM\Column(length: 255)]
     private ?string $NomChaussette = null;
 
-    #[ORM\Column]
-    private ?bool $Statut = null;
-
     #[ORM\ManyToOne(inversedBy: 'type')]
     private ?Couleur $couleur = null;
 
     #[ORM\ManyToOne(inversedBy: 'taille')]
     private ?Type $relation = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $taille = null;
+    #[ORM\Column(length: 255,nullable: true)]
+    private ?string $taille = null;
 
     #[ORM\Column]
     private ?bool $couple = false;
@@ -70,18 +67,6 @@ class Chaussette
         return $this;
     }
 
-    public function isStatut(): ?bool
-    {
-        return $this->Statut;
-    }
-
-    public function setStatut(bool $Statut): static
-    {
-        $this->Statut = $Statut;
-
-        return $this;
-    }
-
     public function getCouleur(): ?Couleur
     {
         return $this->couleur;
@@ -106,12 +91,12 @@ class Chaussette
         return $this;
     }
 
-    public function getTaille(): ?int
+    public function getTaille(): ?string
     {
         return $this->taille;
     }
 
-    public function setTaille(?int $taille): static
+    public function setTaille(?string $taille): static
     {
         $this->taille = $taille;
 
