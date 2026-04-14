@@ -1,0 +1,484 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}SockMatch — Trouve ton binôme{% endblock %}
+
+{% block body_class %}match-page{% endblock %}
+
+{% block body %}
+<div class="sm-app">
+
+    {# ══════════════ TOP NAV ══════════════ #}
+    <header class="sm-topnav">
+        <button class="sm-nav-btn">
+            <div class="sm-avatar">M</div>
+        </button>
+
+        <div class="sm-brand">
+            <span class="sm-brand-emoji">🧦</span>
+            <span class="sm-brand-name">SockMatch</span>
+        </div>
+
+        <div class="sm-nav-right">
+            <button class="sm-nav-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#grad1)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FD297B"/></linearGradient></defs>
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+            </button>
+            <button class="sm-nav-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#grad2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#FF6B35"/><stop offset="100%" stop-color="#FD297B"/></linearGradient></defs>
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    {# ══════════════ CARD STAGE ══════════════ #}
+    <main class="sm-stage">
+
+        {# Fond vide #}
+        <div class="sm-empty" id="emptyState">
+            <div style="font-size:4rem;">🧺</div>
+            <p style="font-size:1.1rem;font-weight:700;color:#333;margin-top:12px;">Plus de chaussettes !</p>
+            <p style="font-size:.85rem;color:#999;margin-top:6px;line-height:1.6;">Reviens plus tard ou signale la tienne.</p>
+            <button class="sm-reload-btn" onclick="reloadDeck()">Recharger</button>
+        </div>
+
+        <div class="sm-deck" id="smDeck">
+
+            {# ── Carte 5 (fond du stack) ── #}
+            <div class="sm-card" data-name="Chaussette Noire" data-id="5">
+                <div class="sm-card-bg" style="background:linear-gradient(160deg,#2d3436 0%,#636e72 100%);">
+                    <span class="sm-card-emoji">🧦</span>
+                </div>
+                <div class="sm-label sm-label-like">LIKE</div>
+                <div class="sm-label sm-label-nope">NOPE</div>
+                <div class="sm-label sm-label-super">SUPER<br>LIKE</div>
+                <div class="sm-card-overlay">
+                    <div class="sm-card-info">
+                        <div class="sm-card-name">
+                            Chaussette Noire
+                            <span class="sm-card-age">Taille 44</span>
+                        </div>
+                        <div class="sm-card-meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            2 km · Dim · Sport
+                        </div>
+                        <div class="sm-card-bio">Chaussette noire côtelée, habituée aux matchs de foot. Un peu odorante, désolé 😅</div>
+                        <div class="sm-card-tags">
+                            <span class="sm-tag sm-tag-lost">Perdue 4j</span>
+                            <span class="sm-tag">Lyon 69003</span>
+                        </div>
+                    </div>
+                    <button class="sm-info-btn" onclick="event.stopPropagation()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {# ── Carte 4 ── #}
+            <div class="sm-card" data-name="Jaune à Pois" data-id="4">
+                <div class="sm-card-bg" style="background:linear-gradient(160deg,#f9ca24 0%,#f0932b 100%);">
+                    <span class="sm-card-emoji">🧦</span>
+                </div>
+                <div class="sm-label sm-label-like">LIKE</div>
+                <div class="sm-label sm-label-nope">NOPE</div>
+                <div class="sm-label sm-label-super">SUPER<br>LIKE</div>
+                <div class="sm-card-overlay">
+                    <div class="sm-card-info">
+                        <div class="sm-card-name">
+                            Jaune à Pois ✨
+                            <span class="sm-card-age">Taille 38</span>
+                        </div>
+                        <div class="sm-card-meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            5 km · Kindy · Coton
+                        </div>
+                        <div class="sm-card-bio">Jaune à pois blancs, élastique encore nickel. Trouvée derrière le sèche-linge. Très douce.</div>
+                        <div class="sm-card-tags">
+                            <span class="sm-tag sm-tag-found">Trouvée</span>
+                            <span class="sm-tag">Villeurbanne</span>
+                        </div>
+                    </div>
+                    <button class="sm-info-btn" onclick="event.stopPropagation()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {# ── Carte 3 ── #}
+            <div class="sm-card" data-name="La Verte de Gym" data-id="3">
+                <div class="sm-card-bg" style="background:linear-gradient(160deg,#55efc4 0%,#00b894 100%);">
+                    <span class="sm-card-emoji">🧦</span>
+                </div>
+                <div class="sm-label sm-label-like">LIKE</div>
+                <div class="sm-label sm-label-nope">NOPE</div>
+                <div class="sm-label sm-label-super">SUPER<br>LIKE</div>
+                <div class="sm-card-overlay">
+                    <div class="sm-card-info">
+                        <div class="sm-card-name">
+                            La Verte de Gym 💪
+                            <span class="sm-card-age">Taille 41</span>
+                        </div>
+                        <div class="sm-card-meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            1 km · Decathlon · Sport
+                        </div>
+                        <div class="sm-card-bio">Chaussette de sport verte, renforts aux orteils. Habituée aux salles de sport. Cherche aventures sportives.</div>
+                        <div class="sm-card-tags">
+                            <span class="sm-tag sm-tag-lost">Perdue 2j</span>
+                            <span class="sm-tag">Lyon 69007</span>
+                        </div>
+                    </div>
+                    <button class="sm-info-btn" onclick="event.stopPropagation()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {# ── Carte 2 ── #}
+            <div class="sm-card" data-name="Violette Étoiles" data-id="2">
+                <div class="sm-card-bg" style="background:linear-gradient(160deg,#a29bfe 0%,#6c5ce7 100%);">
+                    <span class="sm-card-emoji">🧦</span>
+                </div>
+                <div class="sm-label sm-label-like">LIKE</div>
+                <div class="sm-label sm-label-nope">NOPE</div>
+                <div class="sm-label sm-label-super">SUPER<br>LIKE</div>
+                <div class="sm-card-overlay">
+                    <div class="sm-card-info">
+                        <div class="sm-card-name">
+                            Violette Étoiles ✨
+                            <span class="sm-card-age">Taille 37</span>
+                        </div>
+                        <div class="sm-card-meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            3 km · H&amp;M · Coton
+                        </div>
+                        <div class="sm-card-bio">Violette avec étoiles dorées brodées. Montante, très douce. Portée une seule fois. Disparue un mardi matin.</div>
+                        <div class="sm-card-tags">
+                            <span class="sm-tag sm-tag-lost">Perdue 1 sem</span>
+                            <span class="sm-tag">Lyon 69001</span>
+                        </div>
+                    </div>
+                    <button class="sm-info-btn" onclick="event.stopPropagation()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            {# ── Carte 1 (dessus du stack) ── #}
+            <div class="sm-card" data-name="Rougette" data-id="1">
+                <div class="sm-card-bg" style="background:linear-gradient(160deg,#ff6b6b 0%,#ee5a24 100%);">
+                    <span class="sm-card-emoji">🧦</span>
+                </div>
+                <div class="sm-label sm-label-like">LIKE</div>
+                <div class="sm-label sm-label-nope">NOPE</div>
+                <div class="sm-label sm-label-super">SUPER<br>LIKE</div>
+                <div class="sm-card-overlay">
+                    <div class="sm-card-info">
+                        <div class="sm-card-name">
+                            Rougette
+                            <svg class="sm-verified" width="22" height="22" viewBox="0 0 24 24" fill="#4FC3F7"><path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                            <span class="sm-card-age">Taille 42</span>
+                        </div>
+                        <div class="sm-card-meta">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            800 m · Nike · Rayée
+                        </div>
+                        <div class="sm-card-bio">Rayée rouge et blanc, légère usure au talon gauche. Dernière fois vue dans un tambour Bosch Series 6. Répond au doux nom de Rougette.</div>
+                        <div class="sm-card-tags">
+                            <span class="sm-tag sm-tag-lost">Perdue 3j</span>
+                            <span class="sm-tag">Lyon 69003</span>
+                            <span class="sm-tag">Machine à laver</span>
+                        </div>
+                    </div>
+                    <button class="sm-info-btn" onclick="event.stopPropagation()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </button>
+                </div>
+            </div>
+
+        </div>{# /sm-deck #}
+    </main>
+
+    {# ══════════════ BOUTONS D'ACTION ══════════════ #}
+    <section class="sm-actions">
+        <button class="sm-action-btn sm-btn-rewind" onclick="rewindCard()" title="Annuler">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#F2C94C" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.78"/></svg>
+        </button>
+        <button class="sm-action-btn sm-btn-nope" onclick="swipeCard('left')" title="Nope">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#FF4458" stroke-width="2.8" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <button class="sm-action-btn sm-btn-super" onclick="swipeCard('up')" title="Super Like">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4FC3F7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </button>
+        <button class="sm-action-btn sm-btn-like" onclick="swipeCard('right')" title="Like">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1ECC72" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="sm-action-btn sm-btn-boost" onclick="boostCard()" title="Boost">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#9B59F7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </button>
+    </section>
+
+    {# ══════════════ BOTTOM TAB BAR ══════════════ #}
+    <nav class="sm-tabbar">
+        <a href="{{ path('app_home') }}" class="sm-tab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </a>
+        <button class="sm-tab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button class="sm-tab sm-tab-active">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke-width="0">
+                <defs>
+                    <linearGradient id="fireGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#FF6B35"/>
+                        <stop offset="100%" stop-color="#FD297B"/>
+                    </linearGradient>
+                </defs>
+                <path d="M12 2C9.5 6 7 8 7 12a5 5 0 0 0 10 0c0-2.5-1.5-4.5-3-6 0 2-1 3-2 3.5C13 8.5 13 5 12 2z" fill="url(#fireGrad)"/>
+            </svg>
+        </button>
+        <button class="sm-tab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </button>
+        <button class="sm-tab">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </button>
+    </nav>
+
+    {# ══════════════ OVERLAY MATCH ══════════════ #}
+    <div class="sm-match-overlay" id="matchOverlay" onclick="closeMatch()">
+        <div class="sm-match-box" onclick="event.stopPropagation()">
+            <p class="sm-match-eyebrow">C'est un</p>
+            <h2 class="sm-match-title">MATCH !</h2>
+            <p class="sm-match-sub">Tu as swipé à droite en même temps 🧦❤️🧦</p>
+            <div class="sm-match-avatars">
+                <div class="sm-match-av sm-match-av-you">M</div>
+                <div class="sm-match-av sm-match-av-them" id="matchAvThem">🧦</div>
+            </div>
+            <p class="sm-match-names" id="matchNames">Vous &amp; Rougette</p>
+            <button class="sm-match-msg-btn" onclick="closeMatch()">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                Envoyer un message
+            </button>
+            <button class="sm-match-skip-btn" onclick="closeMatch()">Continuer à swiper</button>
+        </div>
+    </div>
+
+</div>{# /sm-app #}
+
+
+
+
+<script>
+(function() {
+    'use strict';
+
+    const THRESHOLD = 80;
+    let isDragging = false;
+    let startX = 0, startY = 0;
+    let dx = 0, dy = 0;
+    let topCard = null;
+    let history = [];
+    let likes = 0, nopes = 0;
+
+    function getDeck() { return document.getElementById('smDeck'); }
+
+    function getTopCard() {
+        const cards = getDeck().querySelectorAll('.sm-card:not([style*="display: none"])');
+        return cards.length ? cards[cards.length - 1] : null;
+    }
+
+    function updateCardStack() {
+        const cards = Array.from(getDeck().querySelectorAll('.sm-card:not([style*="display: none"])'));
+        // Réinitialise les nth-child transforms en retirant le style inline
+        cards.forEach((c, i) => {
+            if (i < cards.length - 1) {
+                // pas la carte du dessus
+                c.style.transition = 'transform .3s ease';
+                c.style.transform = '';
+                setTimeout(() => { c.style.transition = ''; }, 320);
+            }
+        });
+
+        // Si plus de cartes → empty state
+        if (cards.length === 0) {
+            getDeck().style.display = 'none';
+            document.getElementById('emptyState').classList.add('visible');
+        }
+    }
+
+    /* ── Swipe programmatique ── */
+    window.swipeCard = function(dir) {
+        const card = getTopCard();
+        if (!card) return;
+
+        // Labels
+        const likeEl  = card.querySelector('.sm-label-like');
+        const nopeEl  = card.querySelector('.sm-label-nope');
+        const superEl = card.querySelector('.sm-label-super');
+        if (dir === 'right') { likeEl.style.opacity  = 1; likes++; }
+        if (dir === 'left')  { nopeEl.style.opacity  = 1; nopes++; }
+        if (dir === 'up')    { superEl.style.opacity = 1; }
+
+        const cls = dir === 'right' ? 'sm-fly-right'
+                  : dir === 'left'  ? 'sm-fly-left'
+                  :                   'sm-fly-up';
+
+        card.style.transition = 'none';
+        card.classList.add(cls);
+        history.push({ card, dir });
+
+        card.addEventListener('animationend', () => {
+            card.style.display = 'none';
+            card.classList.remove(cls);
+            updateCardStack();
+
+            if (dir === 'right' && Math.random() < 0.4) {
+                const name = card.dataset.name || 'cette chaussette';
+                setTimeout(() => triggerMatch(name), 350);
+            }
+        }, { once: true });
+    };
+
+    /* ── Rewind ── */
+    window.rewindCard = function() {
+        if (!history.length) return;
+        const { card, dir } = history.pop();
+        const cls = dir === 'right' ? 'sm-fly-right'
+                  : dir === 'left'  ? 'sm-fly-left'
+                  :                   'sm-fly-up';
+
+        card.style.display = '';
+        card.classList.remove(cls);
+        card.style.transform = '';
+        card.querySelectorAll('.sm-label').forEach(l => l.style.opacity = 0);
+
+        if (dir === 'right' && likes > 0) likes--;
+        if (dir === 'left'  && nopes > 0) nopes--;
+
+        getDeck().style.display = '';
+        document.getElementById('emptyState').classList.remove('visible');
+
+        updateCardStack();
+    };
+
+    /* ── Boost ── */
+    window.boostCard = function() {
+        const card = getTopCard();
+        if (!card) return;
+        card.classList.remove('sm-boosting');
+        void card.offsetWidth; // reflow
+        card.classList.add('sm-boosting');
+    };
+
+    /* ── Reload ── */
+    window.reloadDeck = function() {
+        getDeck().querySelectorAll('.sm-card').forEach(c => {
+            c.style.display = '';
+            c.style.transform = '';
+            c.querySelectorAll('.sm-label').forEach(l => l.style.opacity = 0);
+        });
+        history = []; likes = 0; nopes = 0;
+        getDeck().style.display = '';
+        document.getElementById('emptyState').classList.remove('visible');
+        updateCardStack();
+    };
+
+    /* ── Match overlay ── */
+    function triggerMatch(name) {
+        document.getElementById('matchNames').textContent = 'Vous & ' + name;
+        document.getElementById('matchOverlay').classList.add('visible');
+    }
+    window.closeMatch = function() {
+        document.getElementById('matchOverlay').classList.remove('visible');
+    };
+
+    /* ════════════════════════════════
+       DRAG / SWIPE GESTURE
+    ════════════════════════════════ */
+    function clientXY(e) {
+        if (e.touches) return { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        return { x: e.clientX, y: e.clientY };
+    }
+
+    function onDown(e) {
+        const card = getTopCard();
+        if (!card) return;
+        // Only start drag if event target is on the top card
+        if (!card.contains(e.target)) return;
+        // Don't drag on info button
+        if (e.target.closest('.sm-info-btn')) return;
+
+        isDragging = true;
+        topCard = card;
+        const { x, y } = clientXY(e);
+        startX = x; startY = y;
+        topCard.style.transition = 'none';
+        topCard.style.zIndex = 50;
+    }
+
+    function onMove(e) {
+        if (!isDragging || !topCard) return;
+        e.preventDefault && e.preventDefault();
+
+        const { x, y } = clientXY(e);
+        dx = x - startX;
+        dy = y - startY;
+
+        const rot = dx * 0.07;
+        topCard.style.transform = `translate(${dx}px, ${dy}px) rotate(${rot}deg)`;
+
+        // Labels
+        const t = THRESHOLD;
+        const likeEl  = topCard.querySelector('.sm-label-like');
+        const nopeEl  = topCard.querySelector('.sm-label-nope');
+        const superEl = topCard.querySelector('.sm-label-super');
+
+        likeEl.style.opacity  = dx > 0  ? Math.min(dx / t, 1)  : 0;
+        nopeEl.style.opacity  = dx < 0  ? Math.min(-dx / t, 1) : 0;
+        superEl.style.opacity = dy < -40 ? Math.min(-dy / (t * 1.5), 1) : 0;
+    }
+
+    function onUp() {
+        if (!isDragging || !topCard) return;
+        isDragging = false;
+        topCard.style.zIndex = '';
+
+        if (dx > THRESHOLD)          { swipeCard('right'); }
+        else if (dx < -THRESHOLD)    { swipeCard('left');  }
+        else if (dy < -THRESHOLD * 1.4) { swipeCard('up'); }
+        else {
+            // Snap back
+            topCard.style.transition = 'transform .4s cubic-bezier(.175,.885,.32,1.275)';
+            topCard.style.transform  = '';
+            topCard.querySelectorAll('.sm-label').forEach(l => l.style.opacity = 0);
+            setTimeout(() => { if (topCard) topCard.style.transition = ''; }, 420);
+        }
+
+        dx = 0; dy = 0; topCard = null;
+    }
+
+    // Mouse
+    document.addEventListener('mousedown', onDown);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup',   onUp);
+    // Touch
+    document.addEventListener('touchstart', onDown, { passive: true });
+    document.addEventListener('touchmove',  onMove, { passive: false });
+    document.addEventListener('touchend',   onUp);
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight') swipeCard('right');
+        if (e.key === 'ArrowLeft')  swipeCard('left');
+        if (e.key === 'ArrowUp')    swipeCard('up');
+        if (e.key.toLowerCase() === 'z') rewindCard();
+    });
+
+})();
+</script>
+
+{% endblock %}
