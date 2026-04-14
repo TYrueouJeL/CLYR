@@ -47,7 +47,7 @@ final class ChaussetteController extends AbstractController
         ]);
     }
 
-    #[Route('/chaussettes/create', name: 'app_chaussette_create')]
+    #[Route('/chaussette/create', name: 'app_chaussette_create')]
     public function create(Request $request, EntityManagerInterface $entityManager, ChaussetteRepository $repo): Response
     {
         $chaussette = new Chaussette();
@@ -92,6 +92,37 @@ final class ChaussetteController extends AbstractController
         return $this->render('chaussette/create.html.twig', [
             'form' => $form->createView(),
             // Tu peux passer d'autres variables si tu as besoin d'autocomplétion (comme pour les tailles)
+            'liste_tailles' => $repo->findDistinctTailles(),
+        ]);
+    }
+
+    #[Route('/chaussette/modify/{id}', name: 'app_chaussette_modify', methods: ['GET', 'POST'])]
+    public function modify(Request $request, Chaussette $chaussette, EntityManagerInterface $entityManager, ChaussetteRepository $repo): Response
+    {
+        // On crée le formulaire en lui passant l'objet Chaussette qu'on veut modifier
+        $form = $this->createForm(ChaussetteType::class, $chaussette);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                // Doctrine sait déjà que c'est une modification, un simple flush() suffit pour sauvegarder en base !
+                $entityManager->flush();
+
+                $this->addFlash('success', 'La chaussette a bien été mise à jour !');
+
+                // On redirige vers la page de détails de cette chaussette (ou vers l'index si tu préfères)
+                return $this->redirectToRoute('app_chaussette_show', ['id' => $chaussette->getId()]);
+
+            } catch (\Exception $e) {
+                // Toujours utile au cas où il y a un problème inattendu avec la base de données
+                $this->addFlash('danger', 'Erreur lors de la sauvegarde. Vérifiez les champs.');
+            }
+        }
+
+        return $this->render('chaussette/modify.html.twig', [
+            'chaussette' => $chaussette,
+            'form'       => $form->createView(),
+            // On repasse la liste des tailles pour l'autocomplétion (comme pour la création)
             'liste_tailles' => $repo->findDistinctTailles(),
         ]);
     }

@@ -1,0 +1,186 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/chaussette_form.js') }}" defer></script>
+{% endblock %}
+
+{% block title %}Modifier : {{ chaussette.NomChaussette|default('Chaussette') }}{% endblock %}
+
+{% block body %}
+    <div class="container my-5" id="edit_chaussette">
+        <div class="row justify-content-center">
+            <div class="col-lg-8"> {# Toujours réduit à 8 car on a moins de champs #}
+
+                {# En-tête principal : PASSÉ EN WARNING POUR LA MODIFICATION #}
+                <div class="card shadow border-0 mb-4">
+                    <div class="card-header bg-warning text-dark p-3 d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0 fs-4 fw-bold"><i class="bi bi-pencil-square"></i> Modifier : {{ chaussette.NomChaussette|default('Sans nom') }}</h3>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="badge bg-light text-warning border border-warning">Mode Modification</span>
+
+                            {# BOUTON QUI OUVRE LA FENÊTRE DE SUPPRESSION (RÉSERVÉ AUX ADMINS) #}
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <button type="button" class="btn btn-danger btn-sm fw-bold shadow-sm" data-bs-toggle="modal" data-bs-target="#modalSuppression">
+                                    <i class="bi bi-trash3-fill"></i> DÉTRUIRE
+                                </button>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="card-body p-4">
+
+                        {{ form_start(form, {'attr': {'id': 'form-edit-chaussette'}}) }}
+
+                        {# ================================================================= #}
+                        {# 1. IDENTIFICATION #}
+                        {# ================================================================= #}
+                        <h5 class="text-warning border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i> Identification</h5>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                {{ form_row(form.NomChaussette, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        {# ================================================================= #}
+                        {# 2. CARACTÉRISTIQUES #}
+                        {# ================================================================= #}
+                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4"><i class="bi bi-palette-fill"></i> Caractéristiques</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.couleur, {'attr': {'class': 'form-select'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form_row(form.taille, {'attr': {'class': 'form-control', 'list': 'list_tailles'}}) }}
+                                <datalist id="list_tailles">
+                                    {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center pt-md-3">
+                                <div class="form-check form-switch fs-5">
+                                    {{ form_widget(form.couple, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
+                                    {{ form_label(form.couple, 'Paire complète ?', {'label_attr': {'class': 'form-check-label ms-2 fw-bold text-warning'}}) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# ================================================================= #}
+                        {# 3. HISTORIQUE & NOTES #}
+                        {# ================================================================= #}
+                        <h5 class="text-warning border-bottom pb-2 mb-3 mt-4"><i class="bi bi-journal-text"></i> Historique & Notes</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_row(form.Commentaire, {'attr': {'class': 'form-control', 'rows': 3}}) }}
+                        </div>
+
+                        {# ================================================================= #}
+                        {# BOUTONS FINAUX #}
+                        {# ================================================================= #}
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="button" id="btn-pre-submit" class="btn btn-warning btn-lg py-3 shadow fw-bold text-dark">
+                                <i class="bi bi-save-fill"></i> ENREGISTRER LES MODIFICATIONS
+                            </button>
+                            <a href="{{ path('app_chaussette_show', {'id': chaussette.id}) }}" class="btn btn-outline-secondary mt-2">
+                                <i class="bi bi-x-circle"></i> Annuler et retourner à la fiche
+                            </a>
+                        </div>
+
+                        {# LE BOUTON FANTÔME POUR OUVRIR LA MODALE #}
+                        <button type="button" id="btn-hidden-modal-trigger" class="d-none" data-bs-toggle="modal" data-bs-target="#modalModification"></button>
+
+                        <div class="d-none">
+                            {{ form_rest(form) }}
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# ================================================================= #}
+    {# FENÊTRE MODALE DE CONFIRMATION DE MODIFICATION #}
+    {# ================================================================= #}
+    <div class="modal fade" id="modalModification" tabindex="-1" aria-labelledby="modalModificationLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-warning shadow-lg">
+
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title fw-bold" id="modalModificationLabel">
+                        <i class="bi bi-question-circle-fill me-2"></i> Confirmation
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+
+                <div class="modal-body text-center p-4">
+                    <i class="bi bi-pencil-square text-warning" style="font-size: 3rem;"></i>
+                    <p class="fs-5 mt-3 fw-bold text-dark">Enregistrer les modifications ?</p>
+                    <p class="text-muted small mb-0">Vous êtes sur le point de mettre à jour <strong>{{ chaussette.NomChaussette|default('cette chaussette') }}</strong>.</p>
+                </div>
+
+                <div class="modal-footer bg-light justify-content-center">
+                    <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Annuler</button>
+                    <button type="button" id="btn-final-submit" class="btn btn-warning fw-bold px-4 shadow text-dark">
+                        <i class="bi bi-check-circle-fill me-1"></i> Oui, enregistrer
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    {# ================================================================= #}
+    {# FENÊTRE MODALE DE CONFIRMATION DE SUPPRESSION (RÉSERVÉ ADMIN) #}
+    {# ================================================================= #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="modal fade" id="modalSuppression" tabindex="-1" aria-labelledby="modalSuppressionLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-danger shadow-lg">
+
+                    <div class="modal-header bg-danger text-white">
+                        <h5 class="modal-title fw-bold" id="modalSuppressionLabel">
+                            <i class="bi bi-exclamation-triangle-fill me-2"></i> Zone de Danger
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                    </div>
+
+                    <div class="modal-body text-center p-4">
+                        <i class="bi bi-trash3 text-danger" style="font-size: 3rem;"></i>
+                        <p class="fs-5 mt-3 fw-bold text-dark">Voulez-vous vraiment jeter cette chaussette ?</p>
+                        <p class="text-muted small mb-0">Toutes les informations seront supprimées de la base de données. <strong>Cette action est irréversible.</strong></p>
+                    </div>
+
+                    <div class="modal-footer bg-light justify-content-center">
+                        <button type="button" class="btn btn-secondary fw-bold px-4" data-bs-dismiss="modal">Annuler</button>
+
+                        {#TODO: Attention à bien créer cette route (app_chaussette_delete) dans ton contrôleur ! #}
+                        <form method="post" action="{{ path('app_chaussette_delete', {'id': chaussette.id}) }}" class="m-0">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ chaussette.id) }}">
+                            <button type="submit" class="btn btn-danger fw-bold px-4 shadow">
+                                <i class="bi bi-check-circle-fill me-1"></i> Oui, jeter définitivement
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

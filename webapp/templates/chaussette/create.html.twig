@@ -1,11 +1,16 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/chaussette_form.js') }}" defer></script>
+{% endblock %}
+
 {% block title %}Nouvelle Chaussette{% endblock %}
 
 {% block body %}
     <div class="container my-5" id="new_chaussette">
         <div class="row justify-content-center">
-            <div class="col-lg-8"> {# J'ai réduit la largeur (col-lg-8 au lieu de 10) car on a moins de champs #}
+            <div class="col-lg-8">
 
                 {# En-tête principal #}
                 <div class="card shadow border-0 mb-4">
