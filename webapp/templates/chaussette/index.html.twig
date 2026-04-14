@@ -1,0 +1,82 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/chaussette.js') }}?v=1" defer></script>
+{% endblock %}
+
+{% block body %}
+    <div class="container my-5" id="collection-chaussettes">
+
+        {# --- ZONE DE RECHERCHE --- #}
+        <div class="card shadow mb-5 border-0 bg-light">
+            <div class="card-body p-4">
+
+                <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-3">
+                    <h4 class="m-0 fw-bold text-vert-fonce">Recherche de Chaussettes</h4>
+                </div>
+
+                {# N'oublie pas d'adapter la route path() de ton action index #}
+                <form id="searchForm" class="row g-3" data-url="{{ path('app_chaussette') }}">
+
+                    {# 1. TYPE #}
+                    <div class="col-md-4 col-lg-2">
+                        <label for="search-type" class="form-label fw-bold small">Type</label>
+                        <input id="search-type" class="form-control" list="dl_types" name="type" placeholder="Ex: Socquette">
+                        <datalist id="dl_types">
+                            {% for t in liste_types %}
+                            <option value="{{ t.NomType }}">
+                                {% endfor %}
+                        </datalist>
+                    </div>
+
+                    {# 2. COULEUR #}
+                    <div class="col-md-4 col-lg-2">
+                        <label for="search-couleur" class="form-label fw-bold small">Couleur</label>
+                        <input id="search-couleur" class="form-control" list="dl_couleurs" name="couleur" placeholder="Ex: Rouge">
+                        <datalist id="dl_couleurs">
+                            {% for c in liste_couleurs %}
+                            <option value="{{ c.NomCouleur }}">
+                                {% endfor %}
+                        </datalist>
+                    </div>
+
+                    {# 3. TAILLE #}
+                    <div class="col-md-4 col-lg-2">
+                        <label for="search-taille" class="form-label fw-bold small">Taille</label>
+                        <input id="search-taille" class="form-control" list="dl_tailles" name="taille" placeholder="Ex: 38-40">
+                        <datalist id="dl_tailles">
+                            {% for taille in liste_tailles %}
+                            <option value="{{ taille }}">
+                                {% endfor %}
+                        </datalist>
+                    </div>
+
+                    {# 4. COUPLE (Menu déroulant plus adapté qu'un datalist pour un booléen) #}
+                    <div class="col-md-4 col-lg-3">
+                        <label for="search-couple" class="form-label fw-bold small">État</label>
+                        <select id="search-couple" class="form-select" name="couple">
+                            <option value="">Toutes (Paires et Orphelines)</option>
+                            <option value="1">En couple (Paire complète)</option>
+                            <option value="0">Orpheline</option>
+                        </select>
+                    </div>
+
+                    {# 5. DATE DE CRÉATION #}
+                    <div class="col-md-4 col-lg-3">
+                        <label for="search-date" class="form-label fw-bold small">Date d'ajout</label>
+                        <input id="search-date" class="form-control" type="date" name="date_creation">
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        {# --- ZONE DE RÉSULTATS --- #}
+        {# C'est ici que l'AJAX va insérer le fichier _liste_chaussettes.html.twig #}
+        <div id="resultats-zone">
+            {% include 'chaussette/_liste_chaussettes.html.twig' %}
+        </div>
+
+    </div>
+{% endblock %}
