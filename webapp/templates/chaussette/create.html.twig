@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nouvelle Chaussette{% endblock %}
+
+{% block body %}
+    <div class="container my-5" id="new_chaussette">
+        <div class="row justify-content-center">
+            <div class="col-lg-8"> {# J'ai réduit la largeur (col-lg-8 au lieu de 10) car on a moins de champs #}
+
+                {# En-tête principal #}
+                <div class="card shadow border-0 mb-4">
+                    <div class="card-header bg-success text-white p-3 d-flex justify-content-between align-items-center">
+                        <h3 class="mb-0 fs-4"><i class="bi bi-plus-circle"></i> Ajouter une chaussette</h3>
+                        <span class="badge bg-light text-success">Mode Création</span>
+                    </div>
+
+                    <div class="card-body p-4">
+                        {{ form_start(form) }}
+
+                        {# ================================================================= #}
+                        {# 1. IDENTIFICATION #}
+                        {# ================================================================= #}
+                        <h5 class="text-success border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i> Identification</h5>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12 mb-3">
+                                <div class="alert alert-info py-2 small mb-3">
+                                    <i class="bi bi-info-circle-fill"></i> Laissez le nom vide pour générer un nom automatique (ex: Chaussette_42).
+                                </div>
+                                {{ form_row(form.NomChaussette, {'attr': {'class': 'form-control', 'placeholder': 'Ex: Chaussette fétiche du dimanche'}}) }}
+                            </div>
+                        </div>
+
+                        {# ================================================================= #}
+                        {# 2. CARACTÉRISTIQUES #}
+                        {# ================================================================= #}
+                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4"><i class="bi bi-palette-fill"></i> Caractéristiques</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.type, {'attr': {'class': 'form-select'}}) }}
+                            </div>
+                            <div class="col-md-6">
+                                {{ form_row(form.couleur, {'attr': {'class': 'form-select'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-6">
+                                {{ form_row(form.taille, {'attr': {'class': 'form-control', 'list': 'list_tailles', 'placeholder': 'Ex: 38-40'}}) }}
+                                {# DATALIST pour l'autocomplétion des tailles déjà existantes #}
+                                <datalist id="list_tailles">
+                                    {% for item in liste_tailles %}<option value="{{ item }}">{% endfor %}
+                                </datalist>
+                            </div>
+                            <div class="col-md-6 d-flex align-items-center pt-md-3">
+                                {# Affichage sous forme de joli switch pour le statut couple/orpheline #}
+                                <div class="form-check form-switch fs-5">
+                                    {{ form_widget(form.couple, {'attr': {'class': 'form-check-input', 'role': 'switch'}}) }}
+                                    {{ form_label(form.couple, 'Paire complète ?', {'label_attr': {'class': 'form-check-label ms-2 fw-bold text-success'}}) }}
+                                </div>
+                            </div>
+                        </div>
+
+                        {# ================================================================= #}
+                        {# 3. HISTORIQUE & NOTES #}
+                        {# ================================================================= #}
+                        <h5 class="text-success border-bottom pb-2 mb-3 mt-4"><i class="bi bi-journal-text"></i> Historique & Notes</h5>
+
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {{ form_row(form.dateCreation, {'attr': {'class': 'form-control'}}) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            {{ form_row(form.Commentaire, {'attr': {'class': 'form-control', 'rows': 3, 'placeholder': 'Un trou à signaler ? Une histoire particulière ?'}}) }}
+                        </div>
+
+                        {# ================================================================= #}
+                        {# BOUTONS D'ACTION #}
+                        {# ================================================================= #}
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" class="btn btn-success btn-lg py-3 shadow">
+                                <i class="bi bi-check-circle-fill"></i> RANGER LA CHAUSSETTE
+                            </button>
+                            {# N'oublie pas d'adapter la route vers ton index #}
+                            <a href="{{ path('app_chaussette') }}" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left"></i> Annuler et Retourner au tiroir
+                            </a>
+                        </div>
+
+                        <div class="d-none">
+                            {{ form_rest(form) }}
+                        </div>
+
+                        {{ form_end(form) }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
