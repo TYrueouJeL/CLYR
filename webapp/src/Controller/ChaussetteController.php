@@ -127,6 +127,34 @@ final class ChaussetteController extends AbstractController
         ]);
     }
 
+    #[Route('/chaussette/{id}', name: 'app_chaussette_show', methods: ['GET'])]
+    public function show(Chaussette $chaussette): Response
+    {
+        return $this->render('chaussette/show.html.twig', [
+            'chaussette' => $chaussette
+        ]);
+    }
+
+    #[Route('/chaussette/supprimer/{id}', name: 'app_chaussette_delete', methods: ['POST'])]
+    public function delete(Request $request, Chaussette $chaussette, EntityManagerInterface $entityManager): Response
+    {
+        // 1. Vérification du jeton de sécurité (CSRF Token) généré dans la vue Twig (pour éviter les failles)
+        if ($this->isCsrfTokenValid('delete' . $chaussette->getId(), $request->request->get('_token'))) {
+
+            // 2. Suppression pure et simple de la chaussette de la base de données
+            $entityManager->remove($chaussette);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'La chaussette a été définitivement jetée à la poubelle.');
+        } else {
+            // Si quelqu'un essaie de tricher avec l'URL
+            $this->addFlash('danger', 'Action non autorisée (Jeton de sécurité invalide).');
+        }
+
+        // 3. Retour au tiroir (la liste complète)
+        return $this->redirectToRoute('app_chaussette_index');
+    }
+
     private function extraireFiltresRecherche(Request $request): array
     {
         return [

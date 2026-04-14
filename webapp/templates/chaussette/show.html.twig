@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ chaussette.NomChaussette|default('Détails de la chaussette') }}{% endblock %}
+
+{% block body %}
+    <div class="container my-5" id="show_chaussette">
+
+        {# --- BOUTONS DE NAVIGATION EN HAUT --- #}
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <a href="{{ path('app_chaussette_index') }}" class="btn btn-outline-secondary shadow-sm">
+                <i class="bi bi-arrow-left"></i> Retour au tiroir
+            </a>
+
+            <a href="{{ path('app_chaussette_edit', {'id': chaussette.id}) }}" class="btn btn-warning shadow-sm fw-bold text-dark">
+                <i class="bi bi-pencil-square"></i> Tricoter cette chaussette
+            </a>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+
+                {# --- CARTE PRINCIPALE --- #}
+                <div class="card shadow border-0 overflow-hidden">
+
+                    {# EN-TÊTE DE LA CARTE #}
+                    <div class="card-header bg-success text-white p-4 text-center border-0">
+                        <i class="bi bi-layers-fill" style="font-size: 3rem; opacity: 0.8;"></i>
+                        <h2 class="mt-2 mb-0 fw-bold">
+                            {{ chaussette.NomChaussette|default('Chaussette sans nom') }}
+                        </h2>
+                        <p class="mb-0 mt-2 text-white-50 small">
+                            Ajoutée le {{ chaussette.dateCreation ? chaussette.dateCreation|date('d/m/Y') : 'Date inconnue' }}
+                        </p>
+                    </div>
+
+                    <div class="card-body p-5 bg-light">
+
+                        {# BADGE D'ÉTAT (Très visuel) #}
+                        <div class="text-center mb-5">
+                            {% if chaussette.couple %}
+                                <div class="badge bg-success bg-opacity-10 text-success border border-success p-3 rounded-pill fs-5 shadow-sm">
+                                    <i class="bi bi-check-circle-fill me-2"></i> Paire Complète
+                                </div>
+                            {% else %}
+                                <div class="badge bg-warning bg-opacity-10 text-warning border border-warning p-3 rounded-pill fs-5 shadow-sm text-dark">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i> Chaussette Orpheline
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# GRILLE D'INFORMATIONS #}
+                        <div class="row g-4 mb-4">
+
+                            {# TYPE #}
+                            <div class="col-md-4 text-center">
+                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
+                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-tag"></i> Type</h6>
+                                    <p class="fs-5 fw-bold mb-0 text-dark">
+                                        {{ chaussette.type ? chaussette.type.NomType : '<span class="text-muted fst-italic">Non défini</span>'|raw }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {# COULEUR #}
+                            <div class="col-md-4 text-center">
+                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
+                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-palette"></i> Couleur</h6>
+                                    <p class="fs-5 fw-bold mb-0 text-dark">
+                                        {{ chaussette.couleur ? chaussette.couleur.NomCouleur : '<span class="text-muted fst-italic">Non définie</span>'|raw }}
+                                    </p>
+                                </div>
+                            </div>
+
+                            {# TAILLE #}
+                            <div class="col-md-4 text-center">
+                                <div class="p-3 bg-white rounded shadow-sm h-100 border-start border-4 border-success">
+                                    <h6 class="text-muted text-uppercase fw-bold mb-2 small"><i class="bi bi-rulers"></i> Taille</h6>
+                                    <p class="fs-5 fw-bold mb-0 text-dark">
+                                        {{ chaussette.taille|default('<span class="text-muted fst-italic">?</span>')|raw }}
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        {# SECTION COMMENTAIRE #}
+                        <div class="card border-0 bg-white shadow-sm mt-4">
+                            <div class="card-body p-4">
+                                <h5 class="text-success fw-bold border-bottom pb-2 mb-3">
+                                    <i class="bi bi-journal-text me-2"></i> Notes & Commentaires
+                                </h5>
+                                {% if chaussette.Commentaire %}
+                                    <p class="mb-0 text-dark" style="white-space: pre-line;">{{ chaussette.Commentaire }}</p>
+                                {% else %}
+                                    <p class="mb-0 text-muted fst-italic">Aucun commentaire enregistré pour cette chaussette.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
