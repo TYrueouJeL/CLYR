@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20260414090045 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return '';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE chaussette ADD CONSTRAINT FK_86BFA0F8C31BA576 FOREIGN KEY (couleur_id) REFERENCES couleur (id)');
+        $this->addSql('ALTER TABLE chaussette ADD CONSTRAINT FK_86BFA0F83256915B FOREIGN KEY (relation_id) REFERENCES type (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE chaussette DROP FOREIGN KEY FK_86BFA0F8C31BA576');
+        $this->addSql('ALTER TABLE chaussette DROP FOREIGN KEY FK_86BFA0F83256915B');
+    }
+}

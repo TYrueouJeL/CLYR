@@ -23,6 +23,24 @@ class Chaussette
     #[ORM\Column]
     private ?bool $Statut = null;
 
+    #[ORM\ManyToOne(inversedBy: 'type')]
+    private ?Couleur $couleur = null;
+
+    #[ORM\ManyToOne(inversedBy: 'taille')]
+    private ?Type $relation = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $taille = null;
+
+    #[ORM\Column]
+    private ?bool $couple = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTime $dateCreation = null;
+
+    #[ORM\ManyToOne(inversedBy: 'chaussettes')]
+    private ?Type $type = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -60,6 +78,78 @@ class Chaussette
     public function setStatut(bool $Statut): static
     {
         $this->Statut = $Statut;
+
+        return $this;
+    }
+
+    public function getCouleur(): ?Couleur
+    {
+        return $this->couleur;
+    }
+
+    public function setCouleur(?Couleur $couleur): static
+    {
+        $this->couleur = $couleur;
+
+        return $this;
+    }
+
+    public function getRelation(): ?Type
+    {
+        return $this->relation;
+    }
+
+    public function setRelation(?Type $relation): static
+    {
+        $this->relation = $relation;
+
+        return $this;
+    }
+
+    public function getTaille(): ?int
+    {
+        return $this->taille;
+    }
+
+    public function setTaille(?int $taille): static
+    {
+        $this->taille = $taille;
+
+        return $this;
+    }
+
+    public function isCouple(): ?bool
+    {
+        return $this->couple;
+    }
+
+    public function setCouple(bool $couple): static
+    {
+        $this->couple = $couple;
+
+        return $this;
+    }
+
+    public function getDateCreation(): ?\DateTime
+    {
+        return $this->dateCreation;
+    }
+
+    public function setDateCreation(?\DateTime $dateCreation): static
+    {
+        $this->dateCreation = $dateCreation;
+
+        return $this;
+    }
+
+    public function getType(): ?Type
+    {
+        return $this->type;
+    }
+
+    public function setType(?Type $type): static
+    {
+        $this->type = $type;
 
         return $this;
     }

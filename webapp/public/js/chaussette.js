@@ -1,22 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('searchForm');
     const zoneResultats = document.getElementById('resultats-zone');
-    // Sélectionne tous les inputs visibles (texte, number, checkbox...)
-    const inputs = form.querySelectorAll('input:not([type="hidden"])');
 
-    // --- GESTION DES SWITCHS ---
-    const switchCorbeille = document.getElementById('switchCorbeille');
-    const inputCorbeille = document.getElementById('inputCorbeille');
-
-    const switchPretEntrant = document.getElementById('switchPretEntrant');
-    const inputPretEntrant = document.getElementById('inputPretEntrant');
-
-    const switchPretSortant = document.getElementById('switchPretSortant');
-    const inputPretSortant = document.getElementById('inputPretSortant');
+    // Sélectionne tous les inputs visibles (texte, date, datalist) ET le select (menu déroulant)
+    const formElements = form.querySelectorAll('input:not([type="hidden"]), select');
 
     const btnPdf = document.getElementById('btnExportPdf');
 
-    // Fonction pour lancer la recherche
+    // --- FONCTION DE RECHERCHE AJAX ---
     function lancerRecherche() {
         const params = new URLSearchParams();
         for (const [key, value] of new FormData(form)) {
@@ -46,31 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
     }
 
-    // 1. Écouteur sur la Corbeille
-    if (switchCorbeille) {
-        switchCorbeille.addEventListener('change', function() {
-            inputCorbeille.value = this.checked ? '1' : '0';
-            lancerRecherche();
-        });
-    }
-
-    // 2. Écouteur sur Prêt Entrant
-    if (switchPretEntrant) {
-        switchPretEntrant.addEventListener('change', function() {
-            inputPretEntrant.value = this.checked ? '1' : '0';
-            lancerRecherche();
-        });
-    }
-
-    // 3. Écouteur sur Prêt Sortant
-    if (switchPretSortant) {
-        switchPretSortant.addEventListener('change', function() {
-            inputPretSortant.value = this.checked ? '1' : '0';
-            lancerRecherche();
-        });
-    }
-
-    // 4. Écouteur sur le bouton PDF
+    // --- ÉCOUTEUR BOUTON EXPORT PDF ---
     if (btnPdf) {
         btnPdf.addEventListener('click', function() {
             // On récupère l'URL qui a été générée par Twig et stockée dans l'attribut data-url-pdf
@@ -83,24 +50,22 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             const params = paramsObj.toString();
 
-            // lance le téléchargement
+            // Lance le téléchargement
             window.location.href = urlPdf + '?' + params;
         });
     }
 
-    // Écouteur sur les champs texte et nombre (avec délai anti-spam)
+    // --- ÉCOUTEUR SUR LES CHAMPS DU FORMULAIRE ---
     let timeout;
-    inputs.forEach(input => {
-        // On ignore les switchs (ils sont gérés au-dessus avec 'change')
-        if(input.id === 'switchCorbeille' || input.id === 'switchPretEntrant' || input.id === 'switchPretSortant') return;
-
-        input.addEventListener('input', function() {
+    formElements.forEach(element => {
+        // L'événement 'input' capte la frappe au clavier, mais aussi les changements de select ou de type="date"
+        element.addEventListener('input', function() {
             clearTimeout(timeout);
-            timeout = setTimeout(lancerRecherche, 300); // Attend 300ms
+            timeout = setTimeout(lancerRecherche, 300); // Attend 300ms après la dernière frappe/clic
         });
     });
 
-    // GESTION DE LA PAGINATION EN AJAX
+    // --- GESTION DE LA PAGINATION EN AJAX ---
     zoneResultats.addEventListener('click', function(e) {
         // On vérifie si l'élément cliqué (ou son parent) est un lien de la pagination
         const pageLink = e.target.closest('.pagination a');
@@ -119,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Petit effet visuel de chargement
             zoneResultats.style.opacity = '0.5';
 
-            /// On va chercher la nouvelle page en coulisses
+            // On va chercher la nouvelle page en coulisses
             fetch(url)
                 .then(response => {
                     if (response.redirected && response.url.includes('/login')) {
@@ -133,7 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     zoneResultats.style.opacity = '1';
 
                     // On remonte la page en douceur vers le haut des résultats
-                    document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+                    document.getElementById('collection-chaussettes').scrollIntoView({ behavior: 'smooth' });
                 })
                 .catch(err => {
                     if (err !== 'Déconnexion détectée') console.error(err);
